@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Task\TaskHelper;
+use App\Models\Task;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Http\Requests\Task as TaskRequest;
 
 class TaskController extends Controller
 {
@@ -13,7 +15,9 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = TaskHelper::allTasks();
+        $paginate = request('paginate') ?? 10;
+        $searchTitle = request('search_title') ?? '';
+        $tasks = TaskHelper::allTasks($paginate, $searchTitle);
         return inertia()->render('Task/Index', [
             'tasks' => $tasks
         ]);
@@ -25,14 +29,16 @@ class TaskController extends Controller
     public function create()
     {
         //
+        return inertia()->render('Task/Create', []);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(TaskRequest\Task $request)
     {
         //
+        dd($request->all());
     }
 
     /**
@@ -64,6 +70,11 @@ class TaskController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $task = TaskHelper::deleteTask($id);
+        } catch (\Exception $err) {
+            return redirect()->route('task.index')->with('alert', 'Error Exitosa');
+        }
+        return redirect()->route('task.index')->with('alert', 'Eliminacíon Exitosa');
     }
 }
