@@ -37,8 +37,13 @@ class TaskController extends Controller
      */
     public function store(TaskRequest\Task $request)
     {
-        //
-        dd($request->all());
+        try {
+            TaskHelper::createTask($request->all());
+        } catch (\Throwable $err) {
+            // dd($err->getMessage());
+            return redirect()->back()->withErrors('alert', 'errores');
+        }
+        return redirect()->route('task.index')->with('alert', 'Tarea creada exitosamente');
     }
 
     /**

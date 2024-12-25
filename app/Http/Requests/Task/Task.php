@@ -23,6 +23,33 @@ class Task extends FormRequest
     {
         return [
             'title' => ['required', 'max:255'],
+            'description' => ['required', 'max:255'],
+        ];
+    }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'title' => 'Titulo',
+            'description' => 'Descripción',
+
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+           
         ];
     }
 }

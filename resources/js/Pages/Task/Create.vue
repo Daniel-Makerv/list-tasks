@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
+defineProps({ errors: Object })
 
 </script>
 <template>
@@ -30,12 +31,15 @@ import { Head } from '@inertiajs/vue3';
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                             placeholder="Titulo de la tarea" required />
                                     </div>
+                                    <div class="text-red-600" v-if="errors.title">{{ errors.title }}</div>
                                     <div class="col-span-2">
                                         <label for="description" class="block mb-2 text-sm font-medium text-gray-900">
                                             Descripción</label>
                                         <textarea id="description" rows="4" v-model="form.description"
                                             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="Descripción de la tarea"></textarea>
+                                            placeholder="Descripción de la tarea"></textarea><br>
+                                        <div class="text-red-600" v-if="errors.description">{{ errors.description }}
+                                        </div>
                                     </div>
 
                                     <button @mouseenter="showTooltip" @mouseleave="hideTooltip" type="button"

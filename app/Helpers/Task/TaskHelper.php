@@ -3,6 +3,8 @@
 namespace App\Helpers\Task;
 
 use App\Models\Task;
+use App\Models\TaskFile;
+use Exception;
 
 class TaskHelper
 {
@@ -27,5 +29,30 @@ class TaskHelper
     public static function deleteTask($taskId)
     {
         $task = Task::find($taskId)->delete();
+    }
+
+    public static function createTask($data)
+    {
+        try {
+            $task = Task::create([
+                'title' => $data['title'],
+                'description' => $data['description'],
+                'completed' => false,
+                'completed_at' => null,
+            ]);
+            if ($data['files']) { //guardando archivos
+                foreach ($data['files'] as $file) {
+                    $path = $file->store('uploads', 'public'); // Guardar el archivo en 'storage/app/public/uploads'
+                    TaskFile::create([
+                        'task_id' => $task->id,
+                        'file_name' => $file->getClientOriginalName(),
+                        'file_path' => $path,
+                        'file_type' => $file->getClientOriginalExtension(),
+                    ]);
+                }
+            }
+        } catch (\Exception $err) {
+            return throw new Exception("Error al guardar la tarea " . $err->getMessage(), 500);
+        }
     }
 }

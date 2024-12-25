@@ -23,6 +23,5 @@ class Task extends Model
     public function files()
     {
         return $this->hasMany(TaskFile::class);
-        // return $this->hasMany(TaskFile::class, 'task_id');
     }
 }
