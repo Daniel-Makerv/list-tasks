@@ -30,3 +30,17 @@ php artisan serve
 ```bash
 npm run dev
 ```
+## Ingresar al sistema
+### 1.-Una vez levantado el sistema, ingresar a la siguiente url:
+```bash
+http://127.0.0.1:8000
+```
+## Datos de accesos:
+### usuario
+```bash
+admin@example.com
+```
+### contraseña
+```bash
+password
+```
