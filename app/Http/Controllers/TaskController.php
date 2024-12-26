@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Task\TaskHelper;
+use App\Models\Task;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Http\Requests\Task as TaskRequest;
 
 class TaskController extends Controller
 {
@@ -13,7 +15,9 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = TaskHelper::allTasks();
+        $paginate = request('paginate') ?? 10;
+        $searchTitle = request('search_title') ?? '';
+        $tasks = TaskHelper::allTasks($paginate, $searchTitle);
         return inertia()->render('Task/Index', [
             'tasks' => $tasks
         ]);
@@ -25,14 +29,21 @@ class TaskController extends Controller
     public function create()
     {
         //
+        return inertia()->render('Task/Create', []);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(TaskRequest\Task $request)
     {
-        //
+        try {
+            TaskHelper::createTask($request->all());
+        } catch (\Throwable $err) {
+            // dd($err->getMessage());
+            return redirect()->back()->withErrors('alert', 'errores' . $err->getMessage());
+        }
+        return redirect()->route('task.index')->with('success', 'Tarea creada exitosamente');
     }
 
     /**
@@ -48,7 +59,12 @@ class TaskController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        // 
+        $task = TaskHelper::findTaskAndFilesById($id);
+        // dd($task);
+        return inertia()->render('Task/Edit', [
+            'task' => $task
+        ]);
     }
 
     /**
@@ -64,6 +80,21 @@ class TaskController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $task = TaskHelper::deleteTask($id);
+        } catch (\Exception $err) {
+            return redirect()->route('task.index')->with('alert', 'Error Exitosa');
+        }
+        return redirect()->route('task.index')->with('success', 'Eliminacíon Exitosa');
+    }
+
+    public function completeTask(string $id)
+    {
+        try {
+            $task = TaskHelper::completeTask($id);
+        } catch (\Exception $err) {
+            return redirect()->route('task.index')->with('success', 'Error Exitosa');
+        }
+        return redirect()->route('task.index')->with('success', 'Tarea Actualizada Exitosamente');
     }
 }
