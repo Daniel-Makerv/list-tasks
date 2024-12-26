@@ -43,7 +43,7 @@ class TaskController extends Controller
             // dd($err->getMessage());
             return redirect()->back()->withErrors('alert', 'errores' . $err->getMessage());
         }
-        return redirect()->route('task.index')->with('alert', 'Tarea creada exitosamente');
+        return redirect()->route('task.index')->with('success', 'Tarea creada exitosamente');
     }
 
     /**
@@ -85,7 +85,7 @@ class TaskController extends Controller
         } catch (\Exception $err) {
             return redirect()->route('task.index')->with('alert', 'Error Exitosa');
         }
-        return redirect()->route('task.index')->with('alert', 'Eliminacíon Exitosa');
+        return redirect()->route('task.index')->with('success', 'Eliminacíon Exitosa');
     }
 
     public function completeTask(string $id)
@@ -93,8 +93,8 @@ class TaskController extends Controller
         try {
             $task = TaskHelper::completeTask($id);
         } catch (\Exception $err) {
-            return redirect()->route('task.index')->with('alert', 'Error Exitosa');
+            return redirect()->route('task.index')->with('success', 'Error Exitosa');
         }
-        return redirect()->route('task.index')->with('alert', 'Tarea Completada Exitosamente');
+        return redirect()->route('task.index')->with('success', 'Tarea Actualizada Exitosamente');
     }
 }

@@ -36,7 +36,7 @@ import { Link } from '@inertiajs/vue3'
 
         </template>
         <div class="py-12">
-            <Alert :isVisible="showAlert" @update:isVisible="showAlert = $event" />
+            <Alert :isVisible="showAlert" :message="messageAlert" />
 
             <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -184,13 +184,16 @@ export default {
             taskDelete: '',
             isTooltipVisible: false, // Estado para controlar la visibilidad del tooltip
             files: [], // Lista de archivos seleccionados
-            showAlert: false // Esta variable controla la visibilidad
+            showAlert: false, // Esta variable controla la visibilidad
+            messageAlert: '',
         };
     },
     props: {
         tasks: {
             required: true,
         },
+        errors: Object,
+        flash: Object,
     },
     methods: {
         showTooltip() {
@@ -222,6 +225,7 @@ export default {
         },
         toggleTaskCompletion(selectedTask) {
             this.$inertia.patch(route('task.complete', selectedTask.id), this.selectedTask);
+            this.messageAlert = 'Tarea Completada Exitosamente';
             this.showAlert = true; // Cambia el valor de la variable
         },
 

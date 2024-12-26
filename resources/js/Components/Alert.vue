@@ -8,8 +8,7 @@
         </svg>
         <span class="sr-only">Info</span>
         <div class="ms-3 text-sm font-medium">
-            A simple info alert with an <a href="#" class="font-semibold underline hover:no-underline">example link</a>.
-            Give it a click if you like.
+            {{ message }} <!-- Mostrar el mensaje pasado como prop -->
         </div>
         <button type="button" @click="closeAlert"
             class="ms-auto -mx-1.5 -my-1.5 bg-red-50 text-red-500 rounded-lg focus:ring-2 focus:ring-red-400 p-1.5 hover:bg-blue-200 inline-flex items-center justify-center h-8 w-8">
@@ -27,6 +26,10 @@ export default {
     props: {
         isVisible: {
             type: Boolean,
+            required: true
+        },
+        message: {  // Nueva propiedad para el mensaje
+            type: String,
             required: true
         }
     },
