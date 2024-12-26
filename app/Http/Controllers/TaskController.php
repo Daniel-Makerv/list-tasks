@@ -41,7 +41,7 @@ class TaskController extends Controller
             TaskHelper::createTask($request->all());
         } catch (\Throwable $err) {
             // dd($err->getMessage());
-            return redirect()->back()->withErrors('alert', 'errores');
+            return redirect()->back()->withErrors('alert', 'errores' . $err->getMessage());
         }
         return redirect()->route('task.index')->with('alert', 'Tarea creada exitosamente');
     }
@@ -59,7 +59,12 @@ class TaskController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        // 
+        $task = TaskHelper::findTaskAndFilesById($id);
+        // dd($task);
+        return inertia()->render('Task/Edit', [
+            'task' => $task
+        ]);
     }
 
     /**
@@ -81,5 +86,15 @@ class TaskController extends Controller
             return redirect()->route('task.index')->with('alert', 'Error Exitosa');
         }
         return redirect()->route('task.index')->with('alert', 'Eliminacíon Exitosa');
+    }
+
+    public function completeTask(string $id)
+    {
+        try {
+            $task = TaskHelper::completeTask($id);
+        } catch (\Exception $err) {
+            return redirect()->route('task.index')->with('alert', 'Error Exitosa');
+        }
+        return redirect()->route('task.index')->with('alert', 'Tarea Completada Exitosamente');
     }
 }

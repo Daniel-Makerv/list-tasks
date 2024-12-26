@@ -36,6 +36,8 @@ import { Link } from '@inertiajs/vue3'
 
         </template>
         <div class="py-12">
+            <Alert :isVisible="showAlert" @update:isVisible="showAlert = $event" />
+
             <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
@@ -84,16 +86,17 @@ import { Link } from '@inertiajs/vue3'
                                         </td>
                                         <td class="px-6 py-4">{{ task.files_count }}</td>
                                         <td class="flex items-center px-6 py-4 space-x-4">
-                                            <button type="button"
-                                                class="font-medium text-blue-600 hover:underline focus:outline-none"
-                                                v-on:click="editTask()">
-                                                Editar
-                                            </button>
+                                            <!-- boton editar tarea -->
+                                            <Link class="font-medium text-blue-600 hover:underline focus:outline-none"
+                                                :href="route('task.edit', { id: task.id })">Editar</Link>
+                                            <!--  -->
+                                            <!-- boton eliminar tarea -->
                                             <button type="button"
                                                 class="font-medium text-red-600 hover:underline focus:outline-none"
                                                 v-on:click="deleteTask(task)">
                                                 Eliminar
                                             </button>
+                                            <!--  -->
                                             <button type="button" :class="{
                                                 'bg-red-600 hover:bg-red-800 focus:ring-red-300': task.completed,
                                                 'bg-green-600 hover:bg-green-800 focus:ring-green-300': !task.completed
@@ -169,16 +172,19 @@ import { Link } from '@inertiajs/vue3'
 </template>
 <script>
 import { router } from '@inertiajs/vue3';
+import Alert from '@/components/Alert.vue';
 
 export default {
-    
+    components: {
+        Alert
+    },
     data() {
         return {
             showModal: false,
             taskDelete: '',
             isTooltipVisible: false, // Estado para controlar la visibilidad del tooltip
             files: [], // Lista de archivos seleccionados
-
+            showAlert: false // Esta variable controla la visibilidad
         };
     },
     props: {
@@ -215,8 +221,8 @@ export default {
             })
         },
         toggleTaskCompletion(selectedTask) {
-            // this.task.completed = !this.task.completed;
-            console.log(selectedTask.id);
+            this.$inertia.patch(route('task.complete', selectedTask.id), this.selectedTask);
+            this.showAlert = true; // Cambia el valor de la variable
         },
 
         handleFiles(event) {
